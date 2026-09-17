@@ -1,5 +1,9 @@
 # AVEVA™ System Platform — Script Function: Embed Content 教學
 
+## 使用軟體
+
+- **AVEVA™ System Platform**（含 OMI／Industrial Graphic Editor）
+
 > 影片來源：[AVEVA™ System Platform - Script Function: Embed Content](https://www.youtube.com/watch?v=FKFarYHU8kk&list=PLJq4rR8tWINyOrvwxbIjRvgTtoyuuEfSz&index=2)
 
 本篇教學說明如何在 AVEVA™ OMI 應用程式中，使用 **Embed Content**（內嵌內容）與 **Remove Embedded Content**（移除內嵌內容）兩個腳本函式，於執行時期（Runtime）動態地將一個工業圖形（Industrial Graphic）內嵌到另一個父圖形（Parent Graphic）中，並示範如何設定位置、尺寸與自訂屬性（Custom Properties）。
