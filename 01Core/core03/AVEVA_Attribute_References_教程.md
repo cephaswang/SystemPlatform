@@ -21,7 +21,7 @@
 
 前兩種引用方式（標籤名稱、階層名稱）都是**直接引用**，通常用於物件的實體層級，也就是圖形動畫連結中最常見的寫法。
 
-![樣板與模型結構](./03_01.jpg)
+![樣板與模型結構](images/03_01.jpg)
 
 ---
 
@@ -45,7 +45,7 @@ Level_001.PV
 
 如下圖所示，`Level_001` 就是這個物件在 Model 樹中的標籤名稱（Tagname）。
 
-![直接引用範例 - 標籤名稱](./03_02.jpg)
+![直接引用範例 - 標籤名稱](images/03_02.jpg)
 
 ### 2. 階層名稱（Hierarchical Name）引用
 
@@ -65,7 +65,7 @@ Mixer100.Level.PV
 
 下圖同時標示出「標籤名稱（Tagname）」與「包含名稱（Contained Name）」兩者的差異：
 
-![直接引用 - Tagname 與 Hierarchical Name](./03_03.jpg)
+![直接引用 - Tagname 與 Hierarchical Name](images/03_03.jpg)
 
 > 💡 **應用情境**：在工業圖形中，如果要同時顯示多個相同類型設備（例如多個 Mixer）的數值，就可以分別用標籤名稱或階層名稱做直接引用，逐一指定要顯示哪一台設備的數據。
 
@@ -81,7 +81,7 @@ Mixer100.Level.PV
 
 其餘 `Bar02`、`Bar03`、`Bar04` 則依序對應 `Mixer200`、`Mixer300`、`Mixer400`。
 
-![Column Chart 使用階層名稱範例](./03_04.jpg)
+![Column Chart 使用階層名稱範例](images/03_04.jpg)
 
 ---
 
@@ -91,7 +91,7 @@ Mixer100.Level.PV
 
 但如果是在**樣板（Template）層級**設計圖形或撰寫腳本，這時候還沒有一個具體的實體可以參照——這正是「相對引用（Relative References）」派上用場的地方。相對引用允許在樣板中先建立引用邏輯，等到樣板被部署到具體實體上時，系統會在執行階段自動解析成對應的實際物件。
 
-![從樣板層級過渡到相對引用](./03_05.jpg)
+![從樣板層級過渡到相對引用](images/03_05.jpg)
 
 ---
 
@@ -109,7 +109,7 @@ Mixer100.Level.PV
 
 以下圖為例，`Mixer100` 內的 `Inlet2_001` 物件若使用 `MyContainer`，就會指向其容器 `Mixer100`；若使用 `MyArea`，則會指向更上層的區域 `Line1`。
 
-![相對引用 - Me、MyContainer、MyArea](./03_06.jpg)
+![相對引用 - Me、MyContainer、MyArea](images/03_06.jpg)
 
 ### 2. 實際範例：PV 屬性設定為 Me.PV
 
@@ -123,7 +123,7 @@ Me.PV
 
 在這張圖中，除了 `PV` 之外，還有 `PVRangeFullScaleMax`（對應 `Me.PV.EngUnitsRangeMax`）與 `PVRangeFullScaleMin`（對應 `Me.PV.EngUnitsRangeMin`），都是同樣的相對引用邏輯應用。
 
-![相對引用範例 - Me.PV](./03_07.jpg)
+![相對引用範例 - Me.PV](images/03_07.jpg)
 
 ### 3. MyEngine / MyPlatform
 
@@ -139,7 +139,7 @@ Me.PV
 - `MyEngine.Attribute` 會指向 `AppEngine1` 的屬性
 - `MyPlatform.Attribute` 會指向 `GRPlatform` 的屬性
 
-![相對引用 - MyEngine、MyPlatform](./03_08.jpg)
+![相對引用 - MyEngine、MyPlatform](images/03_08.jpg)
 
 ---
 
