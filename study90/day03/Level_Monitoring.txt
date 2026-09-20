@@ -1,0 +1,32 @@
+https://www.youtube.com/shorts/Ojk-2N4w4AQ
+Sensor-Based Water Level Monitoring with PLC
+
+生成，中文，英文教程，圖檔目錄 images，含 三菱
+PLC 程式碼 ST。校稿。格式 md，圖片依順序取得。
+材料單。
+
+
+In this video, we will demonstrate how to accurately monitor real-time water levels with PLC and level sensor integration.
+
+The components needed for this setup are:
+- PLC w/Analog input module: www.ato.com/programmable-logic-controller
+- Submersible Level Sensor: https://www.ato.com/level-sensor
+- Level Transmitter: https://www.ato.com/level-sensor
+- HMI: https://www.ato.com/hmi
+
+The real-time water level measurement system offers numerous benefits:
+✅Precise monitoring
+✅Early detection of water level changes
+✅Automated control capabilities
+
+**Make this project yourself and share your thought with us! 💬😉
+
+Remember to LIKE this video and SUBSCRIBE to our channel for more informational content and tutorials on advanced automation systems and applications!
+
+Thank you for watching and learning with us.
+
+
+
+[16:09:55] In this video we will demonstrate how to measure real time water levels inside a container using PLC and level sensor techniques for this project you will need the following components a PLC an analog input module a submersible level sensor a level transmitter with a range of 0 to 1 m operating on 24 V DC with a 4 to 20 mA current output signal and an HMI connect the level transmitter to the PLC by linking out positive to the positive terminal of the 24 V power supply out negative to the zero positive terminal on the PLC and zero negative to the negative terminal of the 24 V power supply this completes the wiring from the transmitter to the PLC open our accompanying automation software on your computer and configure the analog input module create a level conversion function block define the relevant parameters and apply standardization and scaling instructions for data type conversion establish a global data block to store the data download the program to the PLC and monitor it's execution now let's see what will happen as we submerge the sensor into the water you can read the current water level from the connected HMI as you add water to the container the HMI will display the real-time water level make this project yourself and share your thought in comments explore possibilities of automation with atto.
+[16:09:55] com in this video
+
