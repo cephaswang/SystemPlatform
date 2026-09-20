@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Day 2 · 與 FUXA / Node-RED 架構對照</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #FAF8F3;
+    --paper-panel: #FFFFFF;
+    --ink: #1F2933;
+    --ink-soft: #4B5768;
+    --blueprint: #1B3A5C;
+    --blueprint-line: #8ECAE6;
+    --blueprint-line-dim: rgba(142, 202, 230, 0.35);
+    --rust: #B8622B;
+    --border: #D8D2C4;
+    --grid-line: rgba(27, 58, 92, 0.06);
+    --ok: #4F7942;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #11161C;
+      --paper-panel: #171D25;
+      --ink: #E7E9EC;
+      --ink-soft: #A7B0BC;
+      --border: #2A323C;
+      --grid-line: rgba(142, 202, 230, 0.06);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #11161C;
+    --paper-panel: #171D25;
+    --ink: #E7E9EC;
+    --ink-soft: #A7B0BC;
+    --border: #2A323C;
+    --grid-line: rgba(142, 202, 230, 0.06);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--ink);
+    font-family: "IBM Plex Serif", Georgia, serif;
+    line-height: 1.75;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: "IBM Plex Mono", monospace; }
+
+  header.hero {
+    background: var(--blueprint);
+    background-image:
+      linear-gradient(var(--blueprint-line-dim) 1px, transparent 1px),
+      linear-gradient(90deg, var(--blueprint-line-dim) 1px, transparent 1px);
+    background-size: 32px 32px;
+    color: #F2F7FA;
+    padding: 56px 24px 44px;
+    position: relative;
+    overflow: hidden;
+  }
+  header.hero::after {
+    content: "";
+    position: absolute;
+    inset: 12px;
+    border: 1px dashed var(--blueprint-line-dim);
+    pointer-events: none;
+  }
+  .hero-inner { max-width: 720px; margin: 0 auto; position: relative; }
+  .hero-kicker {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.85rem;
+    color: var(--blueprint-line);
+    margin: 0 0 10px;
+  }
+  .hero-day {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 700;
+    font-size: clamp(2.6rem, 8vw, 3.6rem);
+    margin: 0 0 6px;
+    line-height: 1.05;
+  }
+  .hero-title {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 500;
+    font-size: clamp(1.1rem, 3vw, 1.35rem);
+    margin: 0;
+    color: #D7E7F0;
+  }
+
+  main {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 40px 24px 100px;
+  }
+
+  section { margin-bottom: 52px; }
+  section:last-of-type { margin-bottom: 24px; }
+
+  h2 {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    font-size: 1.4rem;
+    color: var(--blueprint);
+    margin: 0 0 6px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--border);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) h2 { color: var(--blueprint-line); }
+  }
+  :root[data-theme="dark"] h2 { color: var(--blueprint-line); }
+
+  h3 {
+    font-family: "IBM Plex Sans", sans-serif;
+    font-weight: 600;
+    font-size: 1.05rem;
+    margin: 24px 0 10px;
+  }
+  p { margin: 0 0 16px; color: var(--ink); max-width: 62ch; }
+
+  .goal-box {
+    background: var(--paper-panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--rust);
+    padding: 18px 20px;
+    border-radius: 2px;
+  }
+  .goal-box p { margin: 0; }
+  .goal-box .label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.8rem;
+    color: var(--rust);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.93rem;
+    background: var(--paper-panel);
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 14px;
+    border: 1px solid var(--border);
+    vertical-align: top;
+  }
+  th {
+    background: var(--grid-line);
+    font-weight: 600;
+  }
+  .compare-table th:first-child { width: 26%; }
+  .compare-table th:not(:first-child), .compare-table td:not(:first-child) { width: 37%; }
+  td .note {
+    display: block;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    margin-top: 6px;
+  }
+  .table-wrap { overflow-x: auto; }
+
+  .img-slot {
+    border: 1.5px dashed var(--blueprint);
+    background: repeating-linear-gradient(135deg, var(--grid-line) 0 10px, transparent 10px 20px);
+    padding: 28px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) .img-slot { border-color: var(--blueprint-line); }
+  }
+  :root[data-theme="dark"] .img-slot { border-color: var(--blueprint-line); }
+  .img-slot .fname {
+    display: inline-block;
+    margin-top: 10px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.82rem;
+    background: var(--paper-panel);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    color: var(--rust);
+  }
+  .img-slot .desc { font-family: "IBM Plex Sans", sans-serif; font-size: 0.92rem; }
+  .img-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 560px) { .img-grid { grid-template-columns: 1fr; } }
+
+  ol.tasks {
+    padding-left: 0;
+    list-style: none;
+    counter-reset: task;
+  }
+  ol.tasks li {
+    counter-increment: task;
+    position: relative;
+    padding: 14px 16px 14px 52px;
+    margin-bottom: 10px;
+    background: var(--paper-panel);
+    border: 1px solid var(--border);
+    font-family: "IBM Plex Sans", sans-serif;
+    font-size: 0.96rem;
+  }
+  ol.tasks li::before {
+    content: counter(task);
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    border: 1.5px solid var(--blueprint);
+    color: var(--blueprint);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.8rem;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) ol.tasks li::before { color: var(--blueprint-line); border-color: var(--blueprint-line); }
+  }
+  :root[data-theme="dark"] ol.tasks li::before { color: var(--blueprint-line); border-color: var(--blueprint-line); }
+
+  .check-box {
+    background: var(--paper-panel);
+    border: 1px solid var(--border);
+    padding: 18px 20px;
+  }
+  .check-box ul { margin: 0; padding-left: 20px; }
+  .check-box li { margin-bottom: 8px; }
+
+  .callout {
+    background: var(--paper-panel);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--ok);
+    padding: 16px 18px;
+    font-size: 0.95rem;
+  }
+  .callout .label {
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.78rem;
+    color: var(--ok);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  footer {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+  }
+  footer a { color: var(--rust); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  @media (max-width: 480px) {
+    header.hero { padding: 40px 18px 32px; }
+    main { padding: 28px 18px 80px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <p class="hero-kicker">PHASE 1 · WEEK 1 · 基礎建置</p>
+    <h1 class="hero-day">Day 2</h1>
+    <p class="hero-title">與 FUXA / Node-RED 架構對照筆記</p>
+  </div>
+</header>
+
+<main>
+
+  <section>
+    <div class="goal-box">
+      <span class="label">今日目標</span>
+      <p>把昨天畫的三層架構圖，拿來跟你已經熟悉的 FUXA 與 Node-RED 架構做對照，找出「概念相同、名稱不同」的地方，建立自己的翻譯對照表——這是讓學習速度加快的關鍵一步。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>一、為什麼要做架構對照</h2>
+    <p>System Platform 的很多設計理念，你其實已經在 FUXA / Node-RED / PLC 的世界裡用過，只是名字不一樣。與其把 AVEVA 當成全新系統從零學起，不如先找出「這個我早就會了，只是換個名字」的部分，把精力集中在真正陌生的觀念上（例如 Galaxy 的集中式資料庫設計、物件繼承）。</p>
+  </section>
+
+  <section>
+    <h2>二、架構對照表</h2>
+    <div class="table-wrap">
+    <table class="compare-table">
+      <tr><th>概念</th><th>FUXA</th><th>Node-RED</th></tr>
+      <tr>
+        <td>AVEVA Application Server<span class="note">物件導向核心</span></td>
+        <td>FUXA 專案檔（project.json）＋內建 Tag 資料庫</td>
+        <td>Node-RED 的 flow 檔（flows.json）</td>
+      </tr>
+      <tr>
+        <td>Galaxy<span class="note">應用程式與設定的資料庫</span></td>
+        <td>FUXA 的專案設定整體（畫面＋Tag＋腳本）</td>
+        <td>一整組 flow tab 集合</td>
+      </tr>
+      <tr>
+        <td>DAServer / OI Server<span class="note">通訊驅動</span></td>
+        <td>FUXA 內建的 Modbus/OPC UA driver 設定</td>
+        <td>node-red-contrib-modbus、node-red-contrib-opcua 節點</td>
+      </tr>
+      <tr>
+        <td>I/O Tag</td>
+        <td>FUXA 的 Tag（Device Tag）</td>
+        <td>Node-RED 中每個訊息的 payload 欄位</td>
+      </tr>
+      <tr>
+        <td>ArchestrA Template（物件範本）</td>
+        <td>沒有直接對應，FUXA 畫面元件較偏向單一實例</td>
+        <td>沒有直接對應，最接近的是可重複使用的 subflow</td>
+      </tr>
+      <tr>
+        <td>InTouch WindowMaker / Viewer</td>
+        <td>FUXA 的網頁編輯器（Editor）與執行畫面（Runtime）</td>
+        <td>Node-RED Dashboard（ui_*節點）</td>
+      </tr>
+      <tr>
+        <td>Alarm 服務</td>
+        <td>FUXA 內建 Alarm 設定（依 Tag 設上下限）</td>
+        <td>需自行用 function node 判斷並推播</td>
+      </tr>
+      <tr>
+        <td>Historian</td>
+        <td>FUXA 內建歷史記錄（SQLite）</td>
+        <td>需外接 InfluxDB/資料庫節點自行儲存</td>
+      </tr>
+    </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>三、關鍵差異（不能直接類比的地方）</h2>
+    <div class="callout">
+      <span class="label">重點提醒</span>
+      <p style="margin:0;">FUXA 與 Node-RED 都是「單一專案檔」的思維——所有設定放在一個檔案或一組 flow 裡。System Platform 則是「集中式資料庫（Galaxy）+ 物件導向繼承（Template → Instance）」的思維，同一個範本改一次，所有實例自動更新。這個差異在 Phase 2 設計設備範本時會非常有感，今天先記住這個方向性的不同即可。</p>
+    </div>
+  </section>
+
+  <section>
+    <h2>四、繪製對照圖</h2>
+    <p>用兩張圖把今天的對照心得視覺化：一張是 FUXA 與 AVEVA 的架構並排圖，一張是 Node-RED 的流程模型與 Galaxy 物件模型並排圖。畫完存檔並放入下方位置。</p>
+
+    <div class="img-grid">
+      <div class="img-slot">
+        <div class="desc">📐 FUXA 架構 vs AVEVA 三層架構 並排對照圖</div>
+        <span class="fname">day2-fuxa-comparison-diagram.png</span>
+      </div>
+      <div class="img-slot">
+        <div class="desc">📐 Node-RED flow 模型 vs Galaxy 物件模型 並排對照圖</div>
+        <span class="fname">day2-nodered-comparison-diagram.png</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>五、今日任務清單</h2>
+    <ol class="tasks">
+      <li>回顧昨天完成的三層架構圖（<span class="mono">day1-three-tier-architecture.png</span>）</li>
+      <li>逐項填寫上方的架構對照表，用自己的專案經驗舉一個實例（例如你目前某個 FUXA 專案裡的 Modbus Tag）</li>
+      <li>畫出 FUXA vs AVEVA 對照圖，存成 <span class="mono">day2-fuxa-comparison-diagram.png</span></li>
+      <li>畫出 Node-RED vs Galaxy 對照圖，存成 <span class="mono">day2-nodered-comparison-diagram.png</span></li>
+      <li>寫下 3 句話：「AVEVA 裡讓我最不習慣的地方是＿＿＿，因為我在 FUXA/Node-RED 裡習慣的做法是＿＿＿」</li>
+    </ol>
+  </section>
+
+  <section>
+    <h2>六、自我檢核</h2>
+    <div class="check-box">
+      <ul>
+        <li>能舉出至少 3 組「FUXA/Node-RED 概念 ↔ AVEVA 概念」的對應關係</li>
+        <li>能說明 Galaxy 的集中式資料庫設計，和 FUXA/Node-RED 的單一專案檔思維有何不同</li>
+        <li>能具體指出一個「AVEVA 有、但 FUXA/Node-RED 沒有直接對應」的功能（例如 Template 繼承）</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <a href="day1.html">← Day 1</a>
+  <span>Day 2 / 90</span>
+</footer>
+
+</body>
+</html>
