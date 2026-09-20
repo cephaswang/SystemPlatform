@@ -1,0 +1,8 @@
+生成，中文，英文教程，圖檔目錄 images，格式 md。
+
+https://www.youtube.com/watch?v=lMw4c_DGKPw
+How to create a New Galaxy from backup file Aveva IDE System Platform with .cab format 
+
+
+[19:37:44] When you restore a galaxy the galaxy repository is restored to the state of the galaxy at the time of the backup this includes object configuration object deployment states galaxy wide configurations including security Io communications management and more however this also means that any configuration changes made after the last backup are overwritten and if needed must be recreated remember runtime is not restored now let's watch a short video I'm creating a new galaxy from a backup file we have our backup file now let's create a new galaxy from the backup we copied our backup into the orchestra backup galaxies folder open Orchestra ID from the start menu or your location the connect to galaxy dialogue box appears menu or your location menu open Orchestra ID from the start menu or your location the connect to galaxy dialogue box appears click new galaxy the new galaxy dialogue box opens select the backup galaxy from the galaxy type down enter a name for the new galaxy remember because this is a new galaxy we do not have to keep the backup file name verify the GR note name click create the create dialogue box progress window appears depending on the size of the galaxy this could be a lengthy process when the progress is 100% completed click close the connect to galaxy dialogue box reappears click connect connect the Orchestra IDE window appears with a new galaxy this section introduced the process of creating a new galaxy from a backup file why to use this feature and what is restored now answer some knowledge check questions to test your understanding
+
